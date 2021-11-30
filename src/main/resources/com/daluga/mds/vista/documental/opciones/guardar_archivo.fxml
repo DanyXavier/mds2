@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane hgap="5.0" style="-fx-background-color: #f0f0f0;" stylesheets="@../../../estilo/estilo.css" vgap="5.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.daluga.mds.controladores.opciones.GuardarArchivoControlador">
+   <columnConstraints>
+      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+      <ColumnConstraints />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+   </rowConstraints>
+   <children>
+      <Label text="Selecciona el archivo" />
+      <TextField fx:id="txt_nombre_archivo" editable="false" prefWidth="200.0" promptText="nombre del archivo..." GridPane.columnIndex="1" />
+      <Label text="Seleccione la fecha de creacion del archivo" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+      <HBox alignment="CENTER_RIGHT" fillHeight="false" spacing="10.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4">
+         <children>
+            <MFXButton fx:id="btn_aceptar" style="-fx-background-color: #4782F0;" text="Aceptar" textFill="WHITE" />
+            <MFXButton fx:id="btn_cancelar" style="-fx-background-color: #F04F38;" text="Cancelar" textFill="WHITE" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" fillHeight="false" spacing="10.0" GridPane.columnIndex="2">
+         <children>
+            <MFXButton fx:id="btn_buscar_archivo" style="-fx-background-color: #4782F0;" text="Buscar archivo" textFill="WHITE" />
+         </children>
+      </HBox>
+      <MFXDatePicker fx:id="date" lineColor="#0005edb2" pickerColor="#0049eb" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+      <ComboBox prefWidth="175.0" promptText="---Seleccione el area---" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+      <ComboBox prefWidth="225.0" promptText="---Seleccione la importancia---" GridPane.rowIndex="3" />
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</GridPane>

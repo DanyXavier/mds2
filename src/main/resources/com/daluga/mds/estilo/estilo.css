@@ -1,0 +1,53 @@
+
+.toolbar-border{
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-background-insets: 0 10px 0 10px;
+}
+.btn-toolbar:hover{
+    -fx-background-color:#c7c7c75c;
+}
+
+.combo-box{
+    -fx-background-radius: 3px!important;
+    -fx-border-radius: 3px!important;
+}
+.text-field{
+    -fx-background-radius: 3px!important;
+    -fx-border-radius: 3px!important;
+}
+/*
+        TAB
+*/
+.tab-pane:top >.tab-header-area > .tab-header-background{
+    -fx-background-color: transparent;
+}
+.tab
+{
+    -fx-padding: 7px 10px 7px 10px;
+    -fx-background-color: transparent;
+    -fx-border-width: 0 0 0 0;
+    -fx-border-color: #c2c2c2 #c2c2c2 #c2c2c2 #c2c2c2;
+    -fx-focus-color: transparent;
+    -fx-border-width: 0 0 2 0;
+    -fx-border-color: transparent transparent transparent transparent;
+}
+.tab:hover
+{
+    -fx-background-color: #c7c7c75c;;
+}
+.tab:selected
+{
+    -fx-background-color: #fbfbfb;
+    -fx-border-width: 0 0 2 0;
+    -fx-border-color: #c2c2c2 #c2c2c2 #ff9500 #c2c2c2
+}
+
+.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
+
+     -fx-border-color: -fx-focus-color;
+}
+
+
+
+
