@@ -1,13 +1,11 @@
 package com.daluga.mds.controladores.gestion_documental;
 
 import com.daluga.mds.Main;
+import com.daluga.mds.controladores.opciones.GuardarArchivoControlador;
 import com.daluga.mds.controladores.opciones.NuevoDirectorioControlador;
 import com.daluga.mds.controladores.sweet_alert.SweetAlertController;
 import com.daluga.mds.helpers.FileTreeItem;
-import com.daluga.mds.modelos.Archivos;
-import com.daluga.mds.modelos.Directorios;
-import com.daluga.mds.modelos.Paginacion;
-import com.daluga.mds.modelos.Usuario;
+import com.daluga.mds.modelos.*;
 import com.daluga.mds.servicios.GestionDocumentalServicios;
 import com.jfoenix.controls.JFXAlert;
 import com.jfoenix.controls.JFXDialog;
@@ -109,6 +107,8 @@ public class GestionDocumental implements Initializable {
     private ObservableList<Directorios> observableList;
     private TreeItem<Archivos> treeDocuments;
     private ObservableList<Archivos> documentsObservableList;
+    private ObservableList<Importancia> importancia_list;
+    private ObservableList<Areas> areas_list;
 
     @FXML
     public void OnClickImprimir(ActionEvent actionEvent) {
@@ -123,7 +123,21 @@ public class GestionDocumental implements Initializable {
     public void OnClickPaginaAnt(ActionEvent actionEvent) {
     }
     @FXML
-    public void OnClickGuardarDoc(ActionEvent actionEvent) {
+    public void OnClickGuardarDoc(ActionEvent actionEvent) throws IOException {
+        principal.getChildren().remove(dialog);
+        Stage stage = (Stage) principal.getScene().getWindow();
+        Stage st = new Stage();
+        st.initOwner(stage);
+        st.initModality(Modality.APPLICATION_MODAL);
+        FXMLLoader nuevo_arch = new FXMLLoader((Main.class.getResource("vista/documental/opciones/guardar_archivo.fxml")));
+        GridPane pane = nuevo_arch.load();
+        GuardarArchivoControlador arch_controlador = nuevo_arch.getController();
+        Scene esc = new Scene(pane);
+        st.setTitle("Creación de directorio");
+        st.setScene(esc);
+        st.setResizable(false);
+        st.show();
+
     }
     @FXML
     public void OnClickNuevoDir(ActionEvent actionEvent) throws IOException {
@@ -189,7 +203,6 @@ public class GestionDocumental implements Initializable {
         root = new TreeItem<>("GRUPOHEREDIA",new ImageView(ROOT_IMG));
         observableList.add(new Directorios(0L,"GRUPOHEREDIA",null));
         cargando("Cargando todos los archivos, espere por favor");
-
         Thread hilo = new Thread(()->{
             try {
                 Thread.sleep(1000);
