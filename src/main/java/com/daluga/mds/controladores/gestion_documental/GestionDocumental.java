@@ -6,6 +6,7 @@ import com.daluga.mds.controladores.opciones.NuevoDirectorioControlador;
 import com.daluga.mds.controladores.sweet_alert.SweetAlertController;
 import com.daluga.mds.helpers.FileTreeItem;
 import com.daluga.mds.modelos.*;
+import com.daluga.mds.servicios.EmpleadoServicio;
 import com.daluga.mds.servicios.GestionDocumentalServicios;
 import com.jfoenix.controls.JFXAlert;
 import com.jfoenix.controls.JFXDialog;
@@ -124,6 +125,7 @@ public class GestionDocumental implements Initializable {
     }
     @FXML
     public void OnClickGuardarDoc(ActionEvent actionEvent) throws IOException {
+
         principal.getChildren().remove(dialog);
         Stage stage = (Stage) principal.getScene().getWindow();
         Stage st = new Stage();
@@ -137,6 +139,10 @@ public class GestionDocumental implements Initializable {
         st.setScene(esc);
         st.setResizable(false);
         st.show();
+
+        arch_controlador.cb_area.setItems(areas_list);
+        arch_controlador.cb_directorio.setItems(combo_directorio.getItems());
+        arch_controlador.cb_importancia.setItems(importancia_list);
 
     }
     @FXML
@@ -200,6 +206,7 @@ public class GestionDocumental implements Initializable {
         observableList = FXCollections.observableArrayList();
         documentsObservableList = FXCollections.observableArrayList();
         GestionDocumentalServicios f = new GestionDocumentalServicios();
+        EmpleadoServicio empleadoServicio = new EmpleadoServicio();
         root = new TreeItem<>("GRUPOHEREDIA",new ImageView(ROOT_IMG));
         observableList.add(new Directorios(0L,"GRUPOHEREDIA",null));
         cargando("Cargando todos los archivos, espere por favor");
@@ -233,7 +240,23 @@ public class GestionDocumental implements Initializable {
             });
         });
         hilo.start();
+        new Thread(()->{
+            try {
+                Thread.sleep(2000);
+                areas_list =FXCollections.observableList(empleadoServicio.obtenerAreas());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
+        }).start();
+        new Thread(()->{
+            try {
+                Thread.sleep(2000);
+                importancia_list =FXCollections.observableList(f.obtenerImportancia());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
         directorio_tabla.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != root && newValue != null){
                 newValue.setGraphic(new ImageView(FOLDER_OPEN_IMAGE));

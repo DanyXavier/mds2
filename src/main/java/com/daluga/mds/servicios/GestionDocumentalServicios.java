@@ -184,4 +184,21 @@ public class GestionDocumentalServicios {
         }
         return null;
     }
+    public List<Importancia> obtenerImportancia(){
+        CloseableHttpClient client = HttpClients.createDefault();
+        HttpGet httpGet = new HttpGet(URL_ARCHIVO_IMPORTANCIA);
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            CloseableHttpResponse response = client.execute(httpGet);
+            String bodyAsString = EntityUtils.toString(response.getEntity());
+            return objectMapper.readValue(bodyAsString,new TypeReference<>(){});
+        } catch (JsonProcessingException e) {
+            System.out.println("error en convertir a json");
+        } catch (UnsupportedEncodingException e) {
+            System.out.println("error en codificar");
+        } catch (IOException e) {
+            System.out.println("error en guardar el area");
+        }
+        return null;
+    }
 }

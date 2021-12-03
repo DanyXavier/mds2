@@ -12,6 +12,8 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.util.StringConverter;
+import jfxtras.styles.jmetro.JMetro;
+import jfxtras.styles.jmetro.Style;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -40,6 +42,12 @@ public class GuardarArchivoControlador implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        new JMetro(txt_nombre_archivo, Style.LIGHT);
+        new JMetro(cb_area, Style.LIGHT);
+        new JMetro(cb_directorio, Style.LIGHT);
+        new JMetro(cb_importancia, Style.LIGHT);
+        new JMetro(txt_nota, Style.LIGHT);
+        new JMetro(txt_descripcion, Style.LIGHT);
         cb_area.setConverter(new StringConverter<>() {
             @Override
             public String toString(Areas object) {
