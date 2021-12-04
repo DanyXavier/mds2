@@ -41,7 +41,8 @@ dependencies {
     implementation 'org.apache.httpcomponents:httpmime:4.5.13'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
     implementation 'com.jfoenix:jfoenix:9.0.10'
-    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'commons-io:commons-io:2.11.0'
+
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")

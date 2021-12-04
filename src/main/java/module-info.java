@@ -11,7 +11,8 @@ module com.daluga.mds {
     requires org.apache.httpcomponents.httpcore;
     requires org.apache.httpcomponents.httpmime;
     requires org.jfxtras.styles.jmetro;
-    requires com.google.gson;
+    requires org.apache.commons.io;
+    requires org.apache.commons.codec;
 
 
     opens com.daluga.mds to javafx.fxml;

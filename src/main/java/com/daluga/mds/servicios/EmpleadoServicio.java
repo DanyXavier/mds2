@@ -19,8 +19,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 public class EmpleadoServicio {
-    private static final String AREA_REST = "http://192.168.1.228:8085/area";
-    private static final String EMPLEADO_REST = "http://192.168.1.228:8085/empleado";
+    private static final String AREA_REST = "http://localhost:4000/area";
+    private static final String EMPLEADO_REST = "http://localhost:4000/empleado";
     public Areas guardarArea(Areas area){
         CloseableHttpClient client = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(AREA_REST);

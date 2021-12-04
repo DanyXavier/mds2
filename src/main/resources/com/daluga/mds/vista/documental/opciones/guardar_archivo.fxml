@@ -32,7 +32,7 @@
    </rowConstraints>
    <children>
       <Label text="Selecciona el archivo" />
-      <TextField fx:id="txt_nombre_archivo" editable="false" prefWidth="200.0" promptText="nombre del archivo..." GridPane.columnIndex="1" />
+      <TextField fx:id="txt_nombre_archivo" prefWidth="200.0" promptText="nombre del archivo..." GridPane.columnIndex="1" />
       <HBox alignment="CENTER" fillHeight="false" spacing="10.0" GridPane.columnIndex="2">
          <children>
             <MFXButton onAction="#OnClickBuscarArchivo" style="-fx-background-color: #4782F0;" text="Buscar archivo" textFill="WHITE" />

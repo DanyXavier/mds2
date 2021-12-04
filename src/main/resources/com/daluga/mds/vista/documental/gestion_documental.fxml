@@ -2,18 +2,17 @@
 
 <?import com.jfoenix.controls.JFXDialog?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.Tooltip?>
-<?import javafx.scene.control.TreeTableColumn?>
-<?import javafx.scene.control.TreeTableView?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -207,7 +206,7 @@
                                                                </children>
                                                             </VBox>
                                                             <Label text="Página" />
-                                                            <TextField fx:id="txt_page" prefWidth="40.0" promptText="1" />
+                                                            <TextField fx:id="txt_page" prefWidth="40.0" text="1" />
                                                             <Label text="de" />
                                                             <Label fx:id="total_pagina" text="1" />
                                                          </children>
@@ -216,7 +215,7 @@
                                                 </VBox>
                                                 <VBox spacing="10.0">
                                                    <children>
-                                                      <MFXButton contentDisplay="GRAPHIC_ONLY" onAction="#OnClickPaginaAnt" styleClass="btn-toolbar">
+                                                      <MFXButton contentDisplay="GRAPHIC_ONLY" onAction="#OnClickPaginaSig" styleClass="btn-toolbar">
                                                          <graphic>
                                                             <SVGPath content="M20,3H5A2,2 0 0,0 3,5V11H7V9L11,12L7,15V13H3V19A2,2 0 0,0 5,21H20A2,2 0 0,0 22,19V5A2,2 0 0,0 20,3M17,17H13V15H17V17M20,13H13V11H20V13M20,9H13V7H20V9M3,13H0V11H3V13Z">
                                                                <fill>
@@ -238,10 +237,10 @@
                                                             </SVGPath>
                                                          </graphic>
                                                          <tooltip>
-                                                            <Tooltip text="Pagina anterior" />
+                                                            <Tooltip text="Pagina Siguiente" />
                                                          </tooltip>
                                                       </MFXButton>
-                                                      <MFXButton contentDisplay="GRAPHIC_ONLY" onAction="#OnClickPaginaSig" styleClass="btn-toolbar">
+                                                      <MFXButton contentDisplay="GRAPHIC_ONLY" onAction="#OnClickPaginaAnt" styleClass="btn-toolbar">
                                                          <graphic>
                                                             <SVGPath content="M4,21H19A2,2 0 0,0 21,19V13H17V15L13,12L17,9V11H21V5A2,2 0 0,0 19,3H4A2,2 0 0,0 2,5V19A2,2 0 0,0 4,21M4,15H8V17H4V15M4,11H11V13H4V11M4,7H11V9H4V7M21,11H24V13H21V11Z">
                                                                <fill>
@@ -263,7 +262,7 @@
                                                             </SVGPath>
                                                          </graphic>
                                                          <tooltip>
-                                                            <Tooltip text="Pagina siguiente" />
+                                                            <Tooltip text="Pagina Anterior" />
                                                          </tooltip>
                                                       </MFXButton>
                                                    </children>
@@ -377,24 +376,20 @@
                </tabs>
             </TabPane>
             <TreeView fx:id="directorio_tabla" prefHeight="200.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="200.0" />
-            <MFXScrollPane pannable="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="270.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="200.0">
-               <content>
-                  <TreeTableView fx:id="tabla_archivos">
-                     <columns>
-                        <TreeTableColumn fx:id="col_number" prefWidth="44.0" text="#" />
-                        <TreeTableColumn fx:id="col_document" prefWidth="106.0" text="Documento" />
-                        <TreeTableColumn fx:id="col_file_name" prefWidth="75.0" text="Nombre" />
-                        <TreeTableColumn fx:id="col_location" minWidth="75.0" prefWidth="190.0" text="Ubicacion física del documento" />
-                        <TreeTableColumn fx:id="col_area" prefWidth="75.0" text="Area" />
-                        <TreeTableColumn fx:id="col_importancia" prefWidth="75.0" text="Importancia" />
-                        <TreeTableColumn fx:id="col_description" prefWidth="75.0" text="Descripcion" />
-                        <TreeTableColumn fx:id="col_date_create" prefWidth="150.0" text="Fecha de creacion" />
-                        <TreeTableColumn fx:id="col_date_up" prefWidth="150.0" text="Fecha de subida" />
-                        <TreeTableColumn fx:id="col_nota" prefWidth="75.0" text="Nota" />
-                     </columns>
-                  </TreeTableView>
-               </content>
-            </MFXScrollPane>
+            <TableView fx:id="tabla_archivos" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="270.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="200.0">
+               <columns>
+                  <TableColumn fx:id="col_number" minWidth="50.0" prefWidth="60.0" text="código" />
+                  <TableColumn fx:id="col_document" prefWidth="70.0" text="Documento" />
+                  <TableColumn fx:id="col_file_name" prefWidth="200.0" text="Nombre" />
+                  <TableColumn fx:id="col_location" minWidth="75.0" prefWidth="190.0" text="Ubicacion física del documento" />
+                  <TableColumn fx:id="col_area" prefWidth="75.0" text="Area" />
+                  <TableColumn fx:id="col_importancia" prefWidth="75.0" text="Importancia" />
+                  <TableColumn fx:id="col_description" prefWidth="75.0" text="Descripcion" />
+                  <TableColumn fx:id="col_date_create" prefWidth="150.0" text="Fecha de creacion" />
+                  <TableColumn fx:id="col_date_up" prefWidth="150.0" text="Fecha de subida" />
+                  <TableColumn fx:id="col_nota" prefWidth="75.0" text="Nota" />
+               </columns>
+            </TableView>
             <ComboBox fx:id="combo_directorio" layoutX="40.0" layoutY="177.0" prefHeight="30.0" prefWidth="150.0" promptText="----TODOS----" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="160.0" />
             <TextField fx:id="txt_nombre_documento" layoutX="216.0" layoutY="163.0" prefHeight="30.0" prefWidth="250.0" promptText="ingrese el nombre del documento" AnchorPane.leftAnchor="170.0" AnchorPane.topAnchor="160.0" />
             <MFXButton layoutX="520.0" layoutY="163.0" onAction="#OnClickBuscar" styleClass="btn-toolbar" text="Buscar archivo" AnchorPane.leftAnchor="430.0" AnchorPane.topAnchor="160.0">

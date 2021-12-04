@@ -20,6 +20,7 @@ import jfxtras.styles.jmetro.Style;
 
 import java.io.File;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class GuardarArchivoControlador implements Initializable {
@@ -43,6 +44,7 @@ public class GuardarArchivoControlador implements Initializable {
     public TextArea txt_descripcion;
 
     public File file;
+    public String nombre;
     @FXML
     public TextArea txt_ubicacion;
 
@@ -55,6 +57,7 @@ public class GuardarArchivoControlador implements Initializable {
         new JMetro(txt_nota, Style.LIGHT);
         new JMetro(txt_descripcion, Style.LIGHT);
         new JMetro(txt_ubicacion,Style.LIGHT);
+
         cb_area.setConverter(new StringConverter<>() {
             @Override
             public String toString(Areas object) {
@@ -130,6 +133,7 @@ public class GuardarArchivoControlador implements Initializable {
         );
         Stage stage = (Stage) txt_nota.getScene().getWindow();
         file = fileChooser.showOpenDialog(stage);
-        txt_nombre_archivo.setText(file.toString());
+        txt_nombre_archivo.setText(file.getName());
+        nombre = file.getName();
     }
 }

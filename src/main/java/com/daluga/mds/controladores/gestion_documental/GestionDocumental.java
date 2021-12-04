@@ -15,14 +15,19 @@ import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXStageDialog;
+import io.github.palexdev.materialfx.controls.MFXTableView;
+import io.github.palexdev.materialfx.controls.cell.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.enums.ButtonType;
 import io.github.palexdev.materialfx.controls.enums.DialogType;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -31,6 +36,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -38,6 +44,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -46,12 +53,11 @@ import javafx.util.StringConverter;
 import jfxtras.styles.jmetro.JMetro;
 import jfxtras.styles.jmetro.Style;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class GestionDocumental implements Initializable {
     @FXML
@@ -77,7 +83,7 @@ public class GestionDocumental implements Initializable {
     @FXML
     public TabPane tab;
     @FXML
-    public TreeTableView<Archivos> tabla_archivos;
+    public TableView<Archivos> tabla_archivos;
     @FXML
     public ComboBox<String> elementos_por_pagina;
     @FXML
@@ -85,45 +91,121 @@ public class GestionDocumental implements Initializable {
     @FXML
     public TreeView<String> directorio_tabla;
     @FXML
-    public TreeTableColumn<Archivos,Long> col_number;
+    public TableColumn<Archivos,Long> col_number;
     @FXML
-    public TreeTableColumn<Archivos,String> col_document;
+    public TableColumn<Archivos,String> col_document;
     @FXML
-    public TreeTableColumn<Archivos,String> col_file_name;
+    public TableColumn<Archivos,String> col_file_name;
     @FXML
-    public TreeTableColumn<Archivos,String> col_location;
+    public TableColumn<Archivos,String> col_location;
     @FXML
-    public TreeTableColumn<Archivos,String> col_area;
+    public TableColumn<Archivos,String> col_area;
     @FXML
-    public TreeTableColumn<Archivos,String> col_importancia;
+    public TableColumn<Archivos,String> col_importancia;
     @FXML
-    public TreeTableColumn<Archivos,String> col_description;
+    public TableColumn<Archivos,String> col_description;
     @FXML
-    public TreeTableColumn<Archivos,String> col_date_create;
+    public TableColumn<Archivos,String> col_date_create;
     @FXML
-    public TreeTableColumn<Archivos,String> col_date_up;
+    public TableColumn<Archivos,String> col_date_up;
     @FXML
-    public TreeTableColumn<Archivos,String> col_nota;
+    public TableColumn<Archivos,String> col_nota;
 
     private TreeItem<String> root;
     // el index 0 es todos
     private ObservableList<Directorios> observableList;
-    private TreeItem<Archivos> treeDocuments;
     private ObservableList<Archivos> documentsObservableList;
     private ObservableList<Importancia> importancia_list;
     private ObservableList<Areas> areas_list;
+    private int total;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        principal.getChildren().remove(dialog);
+        FOLDER_COLLAPSE_IMAGE = new Image(String.valueOf(Main.class.getResource("imagenes/documental/folder_close.png")),30,30,true,true);
+        FOLDER_OPEN_IMAGE = new Image(String.valueOf(Main.class.getResource("imagenes/documental/folder_open.png")),30,30,true,true);
+        FILE_TYPE_PDF = new Image(String.valueOf(Main.class.getResource("imagenes/documental/pdf.png")),30,30,true,true);
+        FILE_TYPE_XLS = new Image(String.valueOf(Main.class.getResource("imagenes/documental/xls.png")),30,30,true,true);
+        FILE_TYPE_DOC = new Image(String.valueOf(Main.class.getResource("imagenes/documental/doc.png")),30,30,true,true);
+        FILE_TYPE_PPT = new Image(String.valueOf(Main.class.getResource("imagenes/documental/ppt.png")),30,30,true,true);
+        FILE_TYPE_NOT = new Image(String.valueOf(Main.class.getResource("imagenes/documental/file_unknown.png")),30,30,true,true);
+        ROOT_IMG =  new Image(String.valueOf(Main.class.getResource("imagenes/documental/desktop.png")),30,30,true,true);
+        new JMetro(menubar, Style.LIGHT);
+        new JMetro(tabla_archivos,Style.LIGHT);
+        new JMetro(elementos_por_pagina,Style.LIGHT);
+        new JMetro(txt_page,Style.LIGHT);
+        new JMetro(directorio_tabla,Style.LIGHT);
+        new JMetro(txt_nombre_documento,Style.LIGHT);
+        new JMetro(combo_directorio,Style.LIGHT);
+        col_number.setSortType(TableColumn.SortType.ASCENDING);
+        ObservableList<String> elementos = FXCollections.observableArrayList("5","10","15","20","25");
+        elementos_por_pagina.setItems(elementos);
+        elementos_por_pagina.getSelectionModel().select(0);
+        elementos_por_pagina.getSelectionModel().selectedItemProperty().addListener((op,old,ne)->{
+            // reloadItem(ne);
+            ObservableList<Archivos> subList = pageResponse(0);
+            tabla_archivos.setItems(subList);
+            directorio_tabla.getSelectionModel().select(0);
+            txt_page.setText(String.valueOf(1));
+        });
+
+        cargarDirectorios();
+        customCol();
+    }
 
     @FXML
     public void OnClickImprimir(ActionEvent actionEvent) {
     }
     @FXML
     public void OnClickDescargar(ActionEvent actionEvent) {
+        Archivos archivo = tabla_archivos.getSelectionModel().getSelectedItem();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialFileName(archivo.getArchivo());
+        fileChooser.setTitle("Descargar documento");
+
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Todos", "*.*")
+        );
+        Stage stage = (Stage) txt_page.getScene().getWindow();
+        File file = fileChooser.showSaveDialog(stage);
+
+        GestionDocumentalServicios g = new GestionDocumentalServicios();
+
+        principal.getChildren().remove(dialog);
+        cargando("Descargando documento, espere por favor");
+        new Thread(()->{
+            File doc = g.descargarArchivo(archivo,file);
+            try {
+                Thread.sleep(2000);
+                System.out.println(doc);
+                Platform.runLater(()->{
+                    dialog.close();
+                });
+            } catch (InterruptedException e) {
+                System.out.println(e);
+            }
+
+        }).start();
     }
     @FXML
     public void OnClickPaginaSig(ActionEvent actionEvent) {
+        int pagina = Integer.parseInt(txt_page.getText());
+        int totalPa = Integer.parseInt(total_pagina.getText());
+        if (pagina<totalPa){
+            txt_page.setText(String.valueOf(pagina+1));
+            ObservableList<Archivos> archivos = pageResponse(pagina);
+            tabla_archivos.setItems(archivos);
+        }
+
     }
     @FXML
     public void OnClickPaginaAnt(ActionEvent actionEvent) {
+        int pagina = Integer.parseInt(txt_page.getText())-1;
+        if (pagina>0){
+            txt_page.setText(String.valueOf(pagina));
+            ObservableList<Archivos> archivos = pageResponse(pagina-1);
+            tabla_archivos.setItems(archivos);
+        }
     }
     @FXML
     public void OnClickGuardarDoc(ActionEvent actionEvent) throws IOException {
@@ -143,7 +225,9 @@ public class GestionDocumental implements Initializable {
         st.show();
 
         arch_controlador.cb_area.setItems(areas_list);
-        arch_controlador.cb_directorio.setItems(combo_directorio.getItems());
+        ObservableList<Directorios> dir = combo_directorio.getItems();
+        dir.remove(0);
+        arch_controlador.cb_directorio.setItems(dir);
         arch_controlador.cb_importancia.setItems(importancia_list);
 
         arch_controlador.btn_aceptar.setOnAction(e->{
@@ -153,7 +237,7 @@ public class GestionDocumental implements Initializable {
 
             GestionDocumentalServicios servicios = new GestionDocumentalServicios();
             Archivos archivos = new Archivos();
-            archivos.setArchivo(arch_controlador.txt_nombre_archivo.getText());
+            archivos.setArchivo(arch_controlador.nombre);
             archivos.setArea(arch_controlador.cb_area.getValue());
             archivos.setDirectorio(arch_controlador.cb_directorio.getValue());
             archivos.setImportancia(arch_controlador.cb_importancia.getValue());
@@ -163,7 +247,7 @@ public class GestionDocumental implements Initializable {
             archivos.setFechaSubida(LocalDate.now().toString());
             archivos.setNota(arch_controlador.txt_nota.getText());
             archivos.setUbicacionFisica(arch_controlador.txt_ubicacion.getText());
-
+            System.out.println(archivos);
             //Directorios directorios = new Directorios();
             //directorios.setDirectorio(arch_controlador.txt_directorio.getText());
             try {
@@ -219,8 +303,7 @@ public class GestionDocumental implements Initializable {
         nuevodir.btn_aceptar.setOnAction(e->{
 
             st.close();
-            cargando("Cargando todos los archivos, espere por favor");
-
+            cargando("cargando");
             GestionDocumentalServicios servicios = new GestionDocumentalServicios();
             Directorios directorios = new Directorios();
             directorios.setDirectorio(nuevodir.txt_directorio.getText());
@@ -257,6 +340,7 @@ public class GestionDocumental implements Initializable {
     }
     @FXML
     public void OnClickRecargar(ActionEvent actionEvent) {
+        tabla_archivos.setItems(documentsObservableList);
     }
 
     private void cargarDirectorios() {
@@ -273,22 +357,32 @@ public class GestionDocumental implements Initializable {
 
                 List<Directorios> directorioList = f.obtenerDirectorios();
                 for(Directorios dir : directorioList){
-                    for (Archivos arch: dir.getArchivos()){
-                        documentsObservableList.add(arch);
-                        TreeItem<Archivos> treeArc = new TreeItem<>(arch);
-                        treeDocuments.getChildren().add(treeArc);
-
+                    for (Archivos archivos: dir.getArchivos()) {
+                        Directorios direc = dir;
+                        direc.setArchivos(null);
+                        archivos.setDirectorio(direc);
+                        documentsObservableList.addAll(archivos);
                     }
+
                     observableList.add(dir);
                     FileTreeItem treeItem = new FileTreeItem(dir);
                     root.getChildren().add(treeItem);
                 }
+                Platform.runLater(()->{
+                    documentsObservableList = documentsObservableList.sorted(Comparator.comparing(Archivos::getId));
+
+                    total = documentsObservableList.size();
+
+                    int pagina = Integer.parseInt(txt_page.getText())-1;
+
+                    ObservableList<Archivos> subList = pageResponse(pagina);
+                    tabla_archivos.setItems(subList);
+                    //tabla_archivos.setShowRoot(false);
+                });
             } catch (IOException | InterruptedException e) {
                 System.out.println("Error en obtener los directorios");
             }
-            System.out.println("hilo ");
             Platform.runLater(()->{
-                tabla_archivos.setRoot(treeDocuments);
                 combo_directorio.setItems(observableList);
                 directorio_tabla.setRoot(root);
                 directorio_tabla.getSelectionModel().selectLast();
@@ -315,14 +409,17 @@ public class GestionDocumental implements Initializable {
             }
         }).start();
         directorio_tabla.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            combo_directorio.getSelectionModel().select(directorio_tabla.getSelectionModel().getSelectedIndex());
+            if (newValue != root) {
+                ObservableList<Archivos> filtrado = documentsObservableList.filtered(p->p.getDirectorio().getDirectorio().equals(newValue.getValue()));
+                tabla_archivos.setItems(filtrado);
+            }
+
             if (newValue != root && newValue != null){
                 newValue.setGraphic(new ImageView(FOLDER_OPEN_IMAGE));
-                combo_directorio.getSelectionModel().select(directorio_tabla.getSelectionModel().getSelectedIndex());
-
             }
             if (oldValue != root && oldValue != null){
                 oldValue.setGraphic(new ImageView(FOLDER_COLLAPSE_IMAGE));
-                combo_directorio.getSelectionModel().select(directorio_tabla.getSelectionModel().getSelectedIndex());
             }
         });
 
@@ -334,6 +431,21 @@ public class GestionDocumental implements Initializable {
 
     }
 
+    private ObservableList<Archivos> pageResponse(int page){
+        int limit = Integer.parseInt(elementos_por_pagina.getValue());
+        int total_pag = (total/limit) + 1 ;
+        total_pagina.setText(String.valueOf(total_pag));
+        int fromIndex = page*limit;
+        int toIndex = fromIndex+limit;
+        if(fromIndex <= total) {
+            if(toIndex > total){
+                toIndex = total;
+            }
+            return FXCollections.observableList(documentsObservableList.subList(fromIndex, toIndex));
+        }else {
+            return FXCollections.observableArrayList();
+        }
+    }
     private void cargando(String s) {
         JFXDialogLayout layout = new JFXDialogLayout();
         Label contentLabel = new Label();
@@ -350,28 +462,37 @@ public class GestionDocumental implements Initializable {
     }
 
     private void customCol(){
-        col_number.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getValue().getId()));
-        col_area.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getValue().getArea().getArea()));
-        col_date_create.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getValue().getFechaCreacion().toString()));
-        col_date_up.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getValue().getFechaSubida().toString()));
-        col_description.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getValue().getDescripcion()));
-        col_file_name.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getValue().getArchivo()));
-        col_importancia.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getValue().getImportancia().getImportancia()));
-        col_location.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getValue().getUbicacionFisica()));
-        col_nota.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getValue().getNota()));
 
-        col_document.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getValue().getArchivo()));
+        col_number.setCellValueFactory(new PropertyValueFactory<>("id"));
+        col_area.setCellValueFactory(param->{
+            SimpleObjectProperty<String> property = new SimpleObjectProperty<>();
+            property.setValue(param.getValue().getArea().getArea());
+            return property;
+        });
+        col_date_create.setCellValueFactory(new PropertyValueFactory<>("fechaCreacion"));
+        col_date_up.setCellValueFactory(new PropertyValueFactory<>("fechaSubida"));
+        col_description.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
+        col_file_name.setCellValueFactory(new PropertyValueFactory<>("archivo"));
+        col_importancia.setCellValueFactory(param->{
+            SimpleObjectProperty<String> property = new SimpleObjectProperty<>();
+            property.setValue(param.getValue().getImportancia().getImportancia());
+            return property;
+        });
+        col_location.setCellValueFactory(new PropertyValueFactory<>("ubicacionFisica"));
+        col_nota.setCellValueFactory(new PropertyValueFactory<>("nota"));
+
+        col_document.setCellValueFactory(new PropertyValueFactory<>("archivo"));
         col_document.setCellFactory(new Callback<>() {
             @Override
-            public TreeTableCell<Archivos, String> call(TreeTableColumn<Archivos, String> param) {
-                return new TreeTableCell<>() {
+            public TableCell<Archivos, String> call(TableColumn<Archivos, String> param) {
+                return new TableCell<>() {
                     @Override
                     protected void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
                         if (item != null) {
                             //System.out.println(item);
-
-                            String type = item.split("\\.")[1];
+                            int total = item.length();
+                            String type = item.substring(total-5,total).split("\\.")[1];
 
                             switch (type) {
                                 case "pdf" -> {
@@ -381,6 +502,7 @@ public class GestionDocumental implements Initializable {
                                     imageview.setImage(FILE_TYPE_PDF);
                                     box.getChildren().add(imageview);
                                     setGraphic(box);
+                                    break;
                                 }
                                 case "xls", "xlsx" -> {
                                     HBox box = new HBox();
@@ -389,6 +511,7 @@ public class GestionDocumental implements Initializable {
                                     imageview.setImage(FILE_TYPE_XLS);
                                     box.getChildren().add(imageview);
                                     setGraphic(box);
+                                    break;
                                 }
                                 case "doc", "docx" -> {
                                     HBox box = new HBox();
@@ -397,6 +520,7 @@ public class GestionDocumental implements Initializable {
                                     imageview.setImage(FILE_TYPE_DOC);
                                     box.getChildren().add(imageview);
                                     setGraphic(box);
+                                    break;
                                 }
                                 case "ppt" -> {
                                     HBox box = new HBox();
@@ -405,6 +529,7 @@ public class GestionDocumental implements Initializable {
                                     imageview.setImage(FILE_TYPE_PPT);
                                     box.getChildren().add(imageview);
                                     setGraphic(box);
+                                    break;
                                 }
                                 default -> {
                                     HBox box = new HBox();
@@ -413,6 +538,7 @@ public class GestionDocumental implements Initializable {
                                     imageview.setImage(FILE_TYPE_NOT);
                                     box.getChildren().add(imageview);
                                     setGraphic(box);
+                                    break;
                                 }
                             }
                         } else {
@@ -445,36 +571,12 @@ public class GestionDocumental implements Initializable {
         });
     }
     public void OnClickBuscar(ActionEvent actionEvent) {
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
         principal.getChildren().remove(dialog);
-        FOLDER_COLLAPSE_IMAGE = new Image(String.valueOf(Main.class.getResource("imagenes/documental/folder_close.png")),30,30,true,true);
-        FOLDER_OPEN_IMAGE = new Image(String.valueOf(Main.class.getResource("imagenes/documental/folder_open.png")),30,30,true,true);
-        FILE_TYPE_PDF = new Image(String.valueOf(Main.class.getResource("imagenes/documental/pdf.png")),30,30,true,true);
-        FILE_TYPE_XLS = new Image(String.valueOf(Main.class.getResource("imagenes/documental/doc.png")),30,30,true,true);
-        FILE_TYPE_DOC = new Image(String.valueOf(Main.class.getResource("imagenes/documental/xls.png")),30,30,true,true);
-        FILE_TYPE_PPT = new Image(String.valueOf(Main.class.getResource("imagenes/documental/ppt.png")),30,30,true,true);
-        FILE_TYPE_NOT = new Image(String.valueOf(Main.class.getResource("imagenes/documental/file_unknown.png")),30,30,true,true);
-        ROOT_IMG =  new Image(String.valueOf(Main.class.getResource("imagenes/documental/desktop.png")),30,30,true,true);
-        new JMetro(menubar, Style.LIGHT);
-        new JMetro(tabla_archivos,Style.LIGHT);
-        new JMetro(elementos_por_pagina,Style.LIGHT);
-        new JMetro(txt_page,Style.LIGHT);
-        new JMetro(directorio_tabla,Style.LIGHT);
-        new JMetro(txt_nombre_documento,Style.LIGHT);
-        new JMetro(combo_directorio,Style.LIGHT);
-        ObservableList<String> elementos = FXCollections.observableArrayList("5","10","15","20","25");
-        elementos_por_pagina.setItems(elementos);
-        elementos_por_pagina.getSelectionModel().select(1);
-        elementos_por_pagina.getSelectionModel().selectedItemProperty().addListener((op,old,ne)->{
-            // reloadItem(ne);
-        });
-
-        cargarDirectorios();
-        customCol();
+        //tabla_archivos.it
+        System.out.println(txt_nombre_documento.getText());
+        tabla_archivos.setItems(documentsObservableList.filtered(p->p.getArchivo().toLowerCase(Locale.ROOT).contains(txt_nombre_documento.getText().toLowerCase(Locale.ROOT))));
     }
+
     @FXML
     public void OnClickImportancia(ActionEvent actionEvent) throws IOException {
         principal.getChildren().remove(dialog);
@@ -494,7 +596,6 @@ public class GestionDocumental implements Initializable {
         nuevoImportancia.btn_aceptar.setOnAction(e->{
 
             st.close();
-            cargando("Cargando todos los archivos, espere por favor");
 
             GestionDocumentalServicios servicios = new GestionDocumentalServicios();
             Importancia importancia = new Importancia();
@@ -549,8 +650,6 @@ public class GestionDocumental implements Initializable {
         nuevoAreaControlador.btn_aceptar.setOnAction(e->{
 
             st.close();
-            cargando("Cargando todos los archivos, espere por favor");
-
             EmpleadoServicio servicios = new EmpleadoServicio();
             Areas areas = new Areas();
             areas.setArea(nuevoAreaControlador.txt_area.getText());
@@ -585,59 +684,4 @@ public class GestionDocumental implements Initializable {
             principal.getChildren().remove(dialog);
         });
     }
-    /*
-    FXMLLoader fxml = new FXMLLoader();
-        fxml.setLocation(LoginController.class.getResource("../resources/sweetAlert.fxml"));
-        //alert cargando
-        JFXAlert<String> alert = new JFXAlert<>(comboBox.getScene().getWindow());
-        JFXDialogLayout layout = new JFXDialogLayout();
-        Label contentLabel = new Label();
-        contentLabel.setStyle("-fx-font-family:'Poppins SemiBold'; -fx-font-size:14px;");
-        //JFXButton btnCancle = new JFXButton("Aceptar");
-        layout.setPrefWidth(300);
-        Pane pane = fxml.load();
-        SweetAlertController controller = fxml.getController();
-        //layout.setActions(btnCancle);
-        controller.loader(pane.getPrefWidth(),pane.getPrefHeight());
-        contentLabel.setText("Cargando, espere por favor");
-        layout.setHeading(pane);
-        layout.setBody(contentLabel);
-        alert.setContent(layout);
-        alert.show();
-
-        try {
-            if (fieldPassword.getText() == null || comboBox.getValue() == null){
-                throw new NullPointerException("El campo esta vacio");
-            }
-            String password = fieldPassword.getText();
-            String username = comboBox.getValue();
-            LoginService authenticate = new LoginService();
-            Usuarios response = authenticate.login(username,password);
-            if (response.getPassword().equals(password)){
-                alert.close();
-                oninfo();
-
-            }else{
-                alert.close();
-                onError();
-                throw new RuntimeException("No se pudo iniciar sesion");
-            }
-        }catch (NullPointerException e){
-            log.error("Error en la linea con null");
-        } catch (IOException e) {
-            log.error("Error en la linea http");
-            log.debug("login sin funcionamiento de los http");
-            oninfo();
-            //TODO dialogo que hubo un error
-        }
-
-                /*JFXDialogLayout layout = new JFXDialogLayout();
-        layout.setPrefWidth(pane.getPrefWidth());
-        pane.setPrefSize(pane.getPrefWidth(),pane.getPrefHeight());
-        layout.setHeading(new Label("Crear nuevo directorio"));
-        layout.setBody(pane);
-        layout.setActions(boxOpt);***
-    //dialog = new JFXDialog(principal,layout,JFXDialog.DialogTransition.CENTER);
-    //dialog.show();
-    * */
 }
