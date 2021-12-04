@@ -2,7 +2,9 @@ package com.daluga.mds.controladores.gestion_documental;
 
 import com.daluga.mds.Main;
 import com.daluga.mds.controladores.opciones.GuardarArchivoControlador;
+import com.daluga.mds.controladores.opciones.NuevoAreaControlador;
 import com.daluga.mds.controladores.opciones.NuevoDirectorioControlador;
+import com.daluga.mds.controladores.opciones.NuevoImportanciaControlador;
 import com.daluga.mds.controladores.sweet_alert.SweetAlertController;
 import com.daluga.mds.helpers.FileTreeItem;
 import com.daluga.mds.modelos.*;
@@ -135,7 +137,7 @@ public class GestionDocumental implements Initializable {
         GridPane pane = nuevo_arch.load();
         GuardarArchivoControlador arch_controlador = nuevo_arch.getController();
         Scene esc = new Scene(pane);
-        st.setTitle("Creación de directorio");
+        st.setTitle("Guardar Archivo");
         st.setScene(esc);
         st.setResizable(false);
         st.show();
@@ -143,6 +145,60 @@ public class GestionDocumental implements Initializable {
         arch_controlador.cb_area.setItems(areas_list);
         arch_controlador.cb_directorio.setItems(combo_directorio.getItems());
         arch_controlador.cb_importancia.setItems(importancia_list);
+
+        arch_controlador.btn_aceptar.setOnAction(e->{
+
+            st.close();
+            cargando("Estamos guardando su archivo espere por favor.");
+
+            GestionDocumentalServicios servicios = new GestionDocumentalServicios();
+            Archivos archivos = new Archivos();
+            archivos.setArchivo(arch_controlador.txt_nombre_archivo.getText());
+            archivos.setArea(arch_controlador.cb_area.getValue());
+            archivos.setDirectorio(arch_controlador.cb_directorio.getValue());
+            archivos.setImportancia(arch_controlador.cb_importancia.getValue());
+            archivos.setEstado(true);
+            archivos.setDescripcion(arch_controlador.txt_descripcion.getText());
+            archivos.setFechaCreacion(arch_controlador.date.getDate().toString());
+            archivos.setFechaSubida(LocalDate.now().toString());
+            archivos.setNota(arch_controlador.txt_nota.getText());
+            archivos.setUbicacionFisica(arch_controlador.txt_ubicacion.getText());
+
+            //Directorios directorios = new Directorios();
+            //directorios.setDirectorio(arch_controlador.txt_directorio.getText());
+            try {
+                Archivos nuevoArc  = servicios.guardarArchivo(archivos,arch_controlador.file);
+                dialog.close();
+                if (nuevoArc != null){
+                    principal.getChildren().remove(dialog);
+                    JFXDialogLayout layout = new JFXDialogLayout();
+                    Pane panel = new Pane();
+                    MFXButton btn_aceptar = new MFXButton("Aceptar");
+                    btn_aceptar.setStyle("-fx-background-color: #4782F0; -fx-text-fill:white");
+                    HBox box = new HBox(btn_aceptar);
+                    panel.setPrefSize(300,300);
+                    layout.setPrefWidth(350);
+                    SweetAlertController al = new SweetAlertController(panel);
+                    panel.getChildren().add(al.success(300,300,200,200));
+                    layout.setHeading(new Label("Creación del directorio correcto"));
+                    layout.setBody(panel);
+                    layout.setActions(box);
+                    dialog = new JFXDialog(principal,layout,JFXDialog.DialogTransition.CENTER);
+                    dialog.show();
+                    btn_aceptar.setOnAction(event ->{
+                        dialog.close();
+                        principal.getChildren().remove(dialog);
+                        cargarDirectorios();
+                    });
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+        arch_controlador.btn_cancelar.setOnAction(e-> {
+            st.close();
+            principal.getChildren().remove(dialog);
+        });
 
     }
     @FXML
@@ -169,8 +225,9 @@ public class GestionDocumental implements Initializable {
             Directorios directorios = new Directorios();
             directorios.setDirectorio(nuevodir.txt_directorio.getText());
             Directorios nuevoDir =servicios.guardarDirectorio(directorios);
+            dialog.close();
             if (nuevoDir != null){
-                dialog.close();
+
                 principal.getChildren().remove(dialog);
                 JFXDialogLayout layout = new JFXDialogLayout();
                 Pane panel = new Pane();
@@ -212,7 +269,7 @@ public class GestionDocumental implements Initializable {
         cargando("Cargando todos los archivos, espere por favor");
         Thread hilo = new Thread(()->{
             try {
-                Thread.sleep(1000);
+                Thread.sleep(3000);
 
                 List<Directorios> directorioList = f.obtenerDirectorios();
                 for(Directorios dir : directorioList){
@@ -242,7 +299,7 @@ public class GestionDocumental implements Initializable {
         hilo.start();
         new Thread(()->{
             try {
-                Thread.sleep(2000);
+                Thread.sleep(1000);
                 areas_list =FXCollections.observableList(empleadoServicio.obtenerAreas());
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -417,6 +474,116 @@ public class GestionDocumental implements Initializable {
 
         cargarDirectorios();
         customCol();
+    }
+    @FXML
+    public void OnClickImportancia(ActionEvent actionEvent) throws IOException {
+        principal.getChildren().remove(dialog);
+        Stage stage = (Stage) principal.getScene().getWindow();
+        Stage st = new Stage();
+        st.initOwner(stage);
+        st.initModality(Modality.APPLICATION_MODAL);
+        FXMLLoader nuevo_dir = new FXMLLoader((Main.class.getResource("vista/documental/opciones/nuevo_importancia.fxml")));
+        GridPane pane = nuevo_dir.load();
+        NuevoImportanciaControlador nuevoImportancia = nuevo_dir.getController();
+        Scene esc = new Scene(pane);
+        st.setTitle("Creación de la etiqueta importancia");
+        st.setScene(esc);
+        st.setResizable(false);
+        st.show();
+        nuevoImportancia.cb_importancia.setItems(importancia_list);
+        nuevoImportancia.btn_aceptar.setOnAction(e->{
+
+            st.close();
+            cargando("Cargando todos los archivos, espere por favor");
+
+            GestionDocumentalServicios servicios = new GestionDocumentalServicios();
+            Importancia importancia = new Importancia();
+            importancia.setImportancia(nuevoImportancia.txt_importancia.getText());
+            Importancia nuevoImport =servicios.guardarImportancia(importancia);
+            dialog.close();
+            if (nuevoImport != null){
+
+                principal.getChildren().remove(dialog);
+                JFXDialogLayout layout = new JFXDialogLayout();
+                Pane panel = new Pane();
+                MFXButton btn_aceptar = new MFXButton("Aceptar");
+                btn_aceptar.setStyle("-fx-background-color: #4782F0; -fx-text-fill:white");
+                HBox box = new HBox(btn_aceptar);
+                panel.setPrefSize(300,300);
+                layout.setPrefWidth(350);
+                SweetAlertController al = new SweetAlertController(panel);
+                panel.getChildren().add(al.success(300,300,200,200));
+                layout.setHeading(new Label("Creación de la etiqueta importancia correcto"));
+                layout.setBody(panel);
+                layout.setActions(box);
+                dialog = new JFXDialog(principal,layout,JFXDialog.DialogTransition.CENTER);
+                dialog.show();
+                btn_aceptar.setOnAction(event ->{
+                    dialog.close();
+                    principal.getChildren().remove(dialog);
+                    cargarDirectorios();
+                });
+            }
+        });
+        nuevoImportancia.btn_cancelar.setOnAction(e-> {
+            st.close();
+            principal.getChildren().remove(dialog);
+        });
+    }
+    @FXML
+    public void OnClickArea(ActionEvent actionEvent) throws IOException {
+        principal.getChildren().remove(dialog);
+        Stage stage = (Stage) principal.getScene().getWindow();
+        Stage st = new Stage();
+        st.initOwner(stage);
+        st.initModality(Modality.APPLICATION_MODAL);
+        FXMLLoader nuevo_dir = new FXMLLoader((Main.class.getResource("vista/documental/opciones/nuevo_area.fxml")));
+        GridPane pane = nuevo_dir.load();
+        NuevoAreaControlador nuevoAreaControlador = nuevo_dir.getController();
+        Scene esc = new Scene(pane);
+        st.setTitle("Creación de la etiqueta importancia");
+        st.setScene(esc);
+        st.setResizable(false);
+        st.show();
+        nuevoAreaControlador.cb_areas.setItems(areas_list);
+        nuevoAreaControlador.btn_aceptar.setOnAction(e->{
+
+            st.close();
+            cargando("Cargando todos los archivos, espere por favor");
+
+            EmpleadoServicio servicios = new EmpleadoServicio();
+            Areas areas = new Areas();
+            areas.setArea(nuevoAreaControlador.txt_area.getText());
+            Areas nuevoImport =servicios.guardarArea(areas);
+            dialog.close();
+            if (nuevoImport != null){
+
+                principal.getChildren().remove(dialog);
+                JFXDialogLayout layout = new JFXDialogLayout();
+                Pane panel = new Pane();
+                MFXButton btn_aceptar = new MFXButton("Aceptar");
+                btn_aceptar.setStyle("-fx-background-color: #4782F0; -fx-text-fill:white");
+                HBox box = new HBox(btn_aceptar);
+                panel.setPrefSize(300,300);
+                layout.setPrefWidth(350);
+                SweetAlertController al = new SweetAlertController(panel);
+                panel.getChildren().add(al.success(300,300,200,200));
+                layout.setHeading(new Label("Creación de la etiqueta importancia correcto"));
+                layout.setBody(panel);
+                layout.setActions(box);
+                dialog = new JFXDialog(principal,layout,JFXDialog.DialogTransition.CENTER);
+                dialog.show();
+                btn_aceptar.setOnAction(event ->{
+                    dialog.close();
+                    principal.getChildren().remove(dialog);
+                    cargarDirectorios();
+                });
+            }
+        });
+        nuevoAreaControlador.btn_cancelar.setOnAction(e-> {
+            st.close();
+            principal.getChildren().remove(dialog);
+        });
     }
     /*
     FXMLLoader fxml = new FXMLLoader();

@@ -5,24 +5,26 @@ import com.daluga.mds.modelos.Directorios;
 import com.daluga.mds.modelos.Importancia;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXDatePicker;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import jfxtras.styles.jmetro.JMetro;
 import jfxtras.styles.jmetro.Style;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class GuardarArchivoControlador implements Initializable {
     @FXML
     public TextField txt_nombre_archivo;
-    @FXML
-    public MFXButton btn_buscar_archivo;
     @FXML
     public MFXDatePicker date;
     @FXML
@@ -40,6 +42,10 @@ public class GuardarArchivoControlador implements Initializable {
     @FXML
     public TextArea txt_descripcion;
 
+    public File file;
+    @FXML
+    public TextArea txt_ubicacion;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         new JMetro(txt_nombre_archivo, Style.LIGHT);
@@ -48,6 +54,7 @@ public class GuardarArchivoControlador implements Initializable {
         new JMetro(cb_importancia, Style.LIGHT);
         new JMetro(txt_nota, Style.LIGHT);
         new JMetro(txt_descripcion, Style.LIGHT);
+        new JMetro(txt_ubicacion,Style.LIGHT);
         cb_area.setConverter(new StringConverter<>() {
             @Override
             public String toString(Areas object) {
@@ -111,5 +118,18 @@ public class GuardarArchivoControlador implements Initializable {
                 }else setText(null);
             }
         });
+    }
+    @FXML
+    public void OnClickBuscarArchivo(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Buscar Documento");
+
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Todos", "*.*"),
+                new FileChooser.ExtensionFilter("PDF", "*.pdf")
+        );
+        Stage stage = (Stage) txt_nota.getScene().getWindow();
+        file = fileChooser.showOpenDialog(stage);
+        txt_nombre_archivo.setText(file.toString());
     }
 }

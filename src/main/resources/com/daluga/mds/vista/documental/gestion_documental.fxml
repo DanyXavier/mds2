@@ -88,6 +88,70 @@
                                        <children>
                                           <HBox spacing="3.0">
                                              <children>
+                                                <VBox spacing="10.0">
+                                                   <children>
+                                                      <MFXButton onAction="#OnClickImportancia" styleClass="btn-toolbar" text="Importancia">
+                                                         <graphic>
+                                                            <SVGPath content="M23,12L20.56,9.22L20.9,5.54L17.29,4.72L15.4,1.54L12,3L8.6,1.54L6.71,4.72L3.1,5.53L3.44,9.21L1,12L3.44,14.78L3.1,18.47L6.71,19.29L8.6,22.47L12,21L15.4,22.46L17.29,19.28L20.9,18.46L20.56,14.78L23,12M13,17H11V15H13V17M13,13H11V7H13V13Z">
+                                                               <fill>
+                                                                  <LinearGradient endX="1.0" endY="1.0" startX="0.3933649289099526" startY="0.4834123222748815">
+                                                                     <stops>
+                                                                        <Stop>
+                                                                           <color>
+                                                                              <Color red="0.3128654956817627" green="0.3144736886024475" blue="0.31578946113586426" />
+                                                                           </color>
+                                                                        </Stop>
+                                                                        <Stop offset="1.0">
+                                                                           <color>
+                                                                              <Color />
+                                                                           </color>
+                                                                        </Stop>
+                                                                     </stops>
+                                                                  </LinearGradient>
+                                                               </fill>
+                                                            </SVGPath>
+                                                         </graphic>
+                                                         <tooltip>
+                                                            <Tooltip text="Agregar Importancia" />
+                                                         </tooltip>
+                                                      </MFXButton>
+                                                      <MFXButton onAction="#OnClickArea" styleClass="btn-toolbar" text="Area">
+                                                         <graphic>
+                                                            <SVGPath content="M10,2H14A2,2 0 0,1 16,4V6H20A2,2 0 0,1 22,8V19A2,2 0 0,1 20,21H4A2,2 0 0,1 2,19V8A2,2 0 0,1 4,6H8V4A2,2 0 0,1 10,2M14,6V4H10V6H14M10.5,17.5L17.09,10.91L15.68,9.5L10.5,14.67L8.41,12.59L7,14L10.5,17.5Z">
+                                                               <fill>
+                                                                  <LinearGradient endX="1.0" endY="1.0" startX="0.3933649289099526" startY="0.4834123222748815">
+                                                                     <stops>
+                                                                        <Stop>
+                                                                           <color>
+                                                                              <Color red="0.3128654956817627" green="0.3144736886024475" blue="0.31578946113586426" />
+                                                                           </color>
+                                                                        </Stop>
+                                                                        <Stop offset="1.0">
+                                                                           <color>
+                                                                              <Color />
+                                                                           </color>
+                                                                        </Stop>
+                                                                     </stops>
+                                                                  </LinearGradient>
+                                                               </fill>
+                                                            </SVGPath>
+                                                         </graphic>
+                                                         <tooltip>
+                                                            <Tooltip text="Agregar Area" />
+                                                         </tooltip>
+                                                      </MFXButton>
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </HBox>
+                                          <Label alignment="CENTER" text="Identificador" />
+                                       </children>
+                                    </VBox>
+                                    <Separator orientation="VERTICAL" prefHeight="60.0" />
+                                    <VBox alignment="CENTER" spacing="10.0">
+                                       <children>
+                                          <HBox spacing="3.0">
+                                             <children>
                                                 <VBox alignment="CENTER" spacing="10.0">
                                                    <children>
                                                       <HBox alignment="CENTER_LEFT" spacing="3.0">
@@ -298,7 +362,6 @@
                                           <Label text="Opciones" />
                                        </children>
                                     </VBox>
-                                    <Separator orientation="VERTICAL" prefHeight="60.0" />
                                  </items>
                                  <padding>
                                     <Insets bottom="5.0" left="15.0" right="15.0" top="5.0" />

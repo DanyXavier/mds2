@@ -22,9 +22,6 @@ import org.apache.http.util.EntityUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class GestionDocumentalServicios {
@@ -105,7 +102,7 @@ public class GestionDocumentalServicios {
         }
         return null;
     }
-    public void guardarArchivo(Archivos archivo, File documento) throws IOException {
+    public Archivos guardarArchivo(Archivos archivo, File documento) throws IOException {
         CloseableHttpClient client = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(URL_ARCHIVO_GUARDAR);
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
@@ -124,7 +121,11 @@ public class GestionDocumentalServicios {
         httpPost.setEntity(multipart);
 
         CloseableHttpResponse response = client.execute(httpPost);
+        String bodyAsString = EntityUtils.toString(response.getEntity());
         client.close();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(bodyAsString,Archivos.class);
     }
     public Paginacion paginacion(Paginacion paginacion) throws IOException {
         CloseableHttpClient client = HttpClients.createDefault();

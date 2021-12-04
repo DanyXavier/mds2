@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane hgap="5.0" style="-fx-background-color: #f0f0f0;" stylesheets="@../../../estilo/estilo.css" vgap="5.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.daluga.mds.controladores.opciones.NuevoAreaControlador">
+  <columnConstraints>
+    <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+    <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+  </columnConstraints>
+  <rowConstraints>
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <Label text="Areas creadas" />
+      <Label text="Nombre del Area" GridPane.rowIndex="1" />
+      <TextField fx:id="txt_area" prefWidth="180.0" promptText="ingrese el nombre de la nueva area" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <HBox alignment="CENTER_RIGHT" fillHeight="false" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <children>
+            <MFXButton fx:id="btn_aceptar" style="-fx-background-color: #4782F0;" text="Aceptar" textFill="WHITE" />
+            <MFXButton fx:id="btn_cancelar" style="-fx-background-color: #F04F38;" text="Cancelar" textFill="WHITE" />
+         </children>
+      </HBox>
+      <ComboBox fx:id="cb_areas" prefWidth="180.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</GridPane>
