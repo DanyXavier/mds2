@@ -46,32 +46,5 @@ public class PdfControlador implements Initializable {
         } catch (IOException e) {
             System.out.println(e);
         }
-        /*
-        engine.getLoadWorker()
-                .stateProperty()
-                .addListener((obs, oldV, newV) -> {
-                    if (Worker.State.SUCCEEDED == newV) {
-                        try {
-                            //InputStream is = Main.class.getResourceAsStream("pdfjs_example.pdf");
-                            System.out.println(stream);
-                            byte[] bytes = IOUtils.toByteArray(stream);
-                            // Base64 from java.util
-                            String base64 = Base64.getEncoder().encodeToString(bytes);
-                            // This must be ran on FXApplicationThread
-                            engine.executeScript("openFileFromBase64('" + base64 + "')");
-
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        } finally {
-                            if (stream != null) {
-                                try {
-                                    stream.close();
-                                } catch (IOException ex) {
-                                    ex.printStackTrace();
-                                }
-                            }
-                        }
-                    }
-                });*/
     }
 }
