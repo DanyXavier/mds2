@@ -5,6 +5,7 @@ import com.daluga.mds.controladores.opciones.GuardarArchivoControlador;
 import com.daluga.mds.controladores.opciones.NuevoAreaControlador;
 import com.daluga.mds.controladores.opciones.NuevoDirectorioControlador;
 import com.daluga.mds.controladores.opciones.NuevoImportanciaControlador;
+import com.daluga.mds.controladores.pdf.PdfControlador;
 import com.daluga.mds.controladores.sweet_alert.SweetAlertController;
 import com.daluga.mds.helpers.FileTreeItem;
 import com.daluga.mds.modelos.*;
@@ -39,10 +40,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -55,6 +53,7 @@ import jfxtras.styles.jmetro.Style;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
@@ -683,5 +682,44 @@ public class GestionDocumental implements Initializable {
             st.close();
             principal.getChildren().remove(dialog);
         });
+    }
+
+    public void OnClickVerPdf(ActionEvent actionEvent) throws IOException {
+        principal.getChildren().remove(dialog);
+        Archivos archivo = tabla_archivos.getSelectionModel().getSelectedItem();
+        Stage stage = (Stage) principal.getScene().getWindow();
+        Stage st = new Stage();
+        st.initOwner(stage);
+        st.initModality(Modality.APPLICATION_MODAL);
+        FXMLLoader nuevo_dir = new FXMLLoader((Main.class.getResource("vista/pdf/pdfView.fxml")));
+        AnchorPane pane = nuevo_dir.load();
+        PdfControlador pdfControlador = nuevo_dir.getController();
+        Scene esc = new Scene(pane);
+        st.setTitle("Ver documento");
+        st.setScene(esc);
+        st.setResizable(false);
+
+
+        GestionDocumentalServicios g = new GestionDocumentalServicios();
+        cargando("Cargando documento, espere por favor");
+
+        new Thread(()->{
+            InputStream doc = g.verPDF(archivo);
+            try {
+                Thread.sleep(2000);
+
+                System.out.println(doc);
+                Platform.runLater(()->{
+                    st.show();
+                    pdfControlador.setDocument(doc);
+                    dialog.close();
+
+                });
+            } catch (InterruptedException e) {
+                System.out.println(e);
+            }
+
+        }).start();
+
     }
 }

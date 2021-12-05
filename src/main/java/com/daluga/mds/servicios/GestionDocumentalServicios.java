@@ -26,6 +26,8 @@ import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.util.EntityUtils;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 public class GestionDocumentalServicios {
@@ -221,18 +223,36 @@ public class GestionDocumentalServicios {
             httpPost.setEntity(entity);
             httpPost.setHeader("Accept", "application/json");
             httpPost.setHeader("Content-type", "application/json");
-            File response = client.execute(httpPost,new FileDownloadResponseHandler(fil));
-            //HttpEntity ent = response.getEntity();
-            //InputStream stream = ent.getContent();
-            //String path = fil.getAbsolutePath();
-            return response;
-
-            //FileOutputStream outputStream = new FileOutputStream(path);
-            //entity.writeTo(outputStream);
-            //outputStream.close();
-
-
-
+            return client.execute(httpPost,new FileDownloadResponseHandler(fil));
+        } catch (JsonProcessingException e) {
+            System.out.println("error en convertir a json");
+        } catch (UnsupportedEncodingException e) {
+            System.out.println("error en codificar");
+        } catch (IOException e) {
+            System.out.println("error en guardar el area");
+        }finally {
+            IOUtils.closeQuietly(client);
+        }
+        //return null;
+        return null;
+    }
+    public InputStream verPDF(Archivos archivos){
+        CloseableHttpClient client = HttpClients.custom()
+                .setRedirectStrategy(new LaxRedirectStrategy()) // adds HTTP REDIRECT support to GET and POST methods
+                .build();
+        HttpPost httpPost = new HttpPost(URL_ARCHIVOS_DOWNLOAD);
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String json = objectMapper.writeValueAsString(archivos);
+            StringEntity entity = new StringEntity(json);
+            httpPost.setEntity(entity);
+            httpPost.setHeader("Accept", "application/json");
+            httpPost.setHeader("Content-type", "application/json");
+            String fileType = archivos.getArchivo().substring(0,archivos.getArchivo().length()-5).split("\\.")[0];
+            Path temp = Files.createTempFile(archivos.getArchivo(),"."+fileType);
+            File fil = temp.toFile();
+            File file = client.execute(httpPost,new FileDownloadResponseHandler(fil));
+            return new FileInputStream(file);
         } catch (JsonProcessingException e) {
             System.out.println("error en convertir a json");
         } catch (UnsupportedEncodingException e) {
