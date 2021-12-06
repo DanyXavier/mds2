@@ -31,14 +31,14 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class GestionDocumentalServicios {
-    private static final String URL_DIRECTORIOS_TODOS = "http://localhost:4000/directorio";
-    private static final String URL_ARCHIVOS = "http://localhost:4000/archivo";
-    private static final String URL_ARCHIVOS_BY_DOCUMENTS = "http://localhost:4000/archivo/get_dir_id";
-    private static final String URL_ARCHIVOS_BY_NOMBRE_DIRECTORIO = "http://localhost:4000/archivo/get_by_name";
-    private static final String URL_ARCHIVO_GUARDAR = "http://localhost:4000/archivo";
-    private static final String URL_ARCHIVO_PAGINACION = "http://localhost:4000/archivo/paginacion";
-    private static final String URL_ARCHIVO_IMPORTANCIA = "http://localhost:4000/directorio/importancia";
-    private static final String URL_ARCHIVOS_DOWNLOAD = "http://localhost:4000/archivo/download";
+    private static final String URL_DIRECTORIOS_TODOS = "http://192.168.1.228:8085/directorio";
+    private static final String URL_ARCHIVOS = "http://192.168.1.228:8085/archivo";
+    private static final String URL_ARCHIVOS_BY_DOCUMENTS = "http://192.168.1.228:8085/archivo/get_dir_id";
+    private static final String URL_ARCHIVOS_BY_NOMBRE_DIRECTORIO = "http://192.168.1.228:8085/archivo/get_by_name";
+    private static final String URL_ARCHIVO_GUARDAR = "http://192.168.1.228:8085/archivo";
+    private static final String URL_ARCHIVO_PAGINACION = "http://192.168.1.228:8085/archivo/paginacion";
+    private static final String URL_ARCHIVO_IMPORTANCIA = "http://192.168.1.228:8085/directorio/importancia";
+    private static final String URL_ARCHIVOS_DOWNLOAD = "http://192.168.1.228:8085/archivo/download";
     //192.168.1.228:8085
 
     public List<Directorios> obtenerDirectorios() throws IOException {
@@ -125,7 +125,7 @@ public class GestionDocumentalServicios {
         builder.addTextBody("estado", String.valueOf(archivo.getEstado()));
         builder.addTextBody("dirName", archivo.getDirectorio().getDirectorio());
         builder.addBinaryBody(
-                "file", documento, ContentType.APPLICATION_OCTET_STREAM, documento.getName());
+                "file", documento, ContentType.APPLICATION_OCTET_STREAM, archivo.getArchivo());
         HttpEntity multipart = builder.build();
         httpPost.setEntity(multipart);
 

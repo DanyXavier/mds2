@@ -221,6 +221,7 @@ public class GestionDocumental implements Initializable {
         st.setTitle("Guardar Archivo");
         st.setScene(esc);
         st.setResizable(false);
+        st.getIcons().add(new Image(Main.class.getResourceAsStream("imagenes/grupoheredia.png")));
         st.show();
 
         arch_controlador.cb_area.setItems(areas_list);
@@ -230,13 +231,18 @@ public class GestionDocumental implements Initializable {
         arch_controlador.cb_importancia.setItems(importancia_list);
 
         arch_controlador.btn_aceptar.setOnAction(e->{
-
+            String filename = "";
+            int index = arch_controlador.txt_nombre_archivo.getText().lastIndexOf('.');
+            if(index > 0) {
+                filename = arch_controlador.txt_nombre_archivo.getText() ;
+            }else {
+                filename = arch_controlador.txt_nombre_archivo.getText() +"."+ arch_controlador.ext;
+            }
             st.close();
             cargando("Estamos guardando su archivo espere por favor.");
-
             GestionDocumentalServicios servicios = new GestionDocumentalServicios();
             Archivos archivos = new Archivos();
-            archivos.setArchivo(arch_controlador.nombre);
+            archivos.setArchivo(filename);
             archivos.setArea(arch_controlador.cb_area.getValue());
             archivos.setDirectorio(arch_controlador.cb_directorio.getValue());
             archivos.setImportancia(arch_controlador.cb_importancia.getValue());
@@ -298,6 +304,7 @@ public class GestionDocumental implements Initializable {
         st.setTitle("Creación de directorio");
         st.setScene(esc);
         st.setResizable(false);
+        st.getIcons().add(new Image(Main.class.getResourceAsStream("imagenes/grupoheredia.png")));
         st.show();
         nuevodir.btn_aceptar.setOnAction(e->{
 
@@ -590,6 +597,7 @@ public class GestionDocumental implements Initializable {
         st.setTitle("Creación de la etiqueta importancia");
         st.setScene(esc);
         st.setResizable(false);
+        st.getIcons().add(new Image(Main.class.getResourceAsStream("imagenes/grupoheredia.png")));
         st.show();
         nuevoImportancia.cb_importancia.setItems(importancia_list);
         nuevoImportancia.btn_aceptar.setOnAction(e->{
@@ -644,6 +652,7 @@ public class GestionDocumental implements Initializable {
         st.setTitle("Creación de la etiqueta importancia");
         st.setScene(esc);
         st.setResizable(false);
+        st.getIcons().add(new Image(Main.class.getResourceAsStream("imagenes/grupoheredia.png")));
         st.show();
         nuevoAreaControlador.cb_areas.setItems(areas_list);
         nuevoAreaControlador.btn_aceptar.setOnAction(e->{
@@ -697,6 +706,7 @@ public class GestionDocumental implements Initializable {
         Scene esc = new Scene(pane);
         st.setTitle("Ver documento");
         st.setScene(esc);
+        st.getIcons().add(new Image(Main.class.getResourceAsStream("imagenes/grupoheredia.png")));
         st.setResizable(false);
 
 

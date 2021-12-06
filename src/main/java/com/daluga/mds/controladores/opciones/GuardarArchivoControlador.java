@@ -48,6 +48,8 @@ public class GuardarArchivoControlador implements Initializable {
     @FXML
     public TextArea txt_ubicacion;
 
+    public String ext;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         new JMetro(txt_nombre_archivo, Style.LIGHT);
@@ -135,5 +137,7 @@ public class GuardarArchivoControlador implements Initializable {
         file = fileChooser.showOpenDialog(stage);
         txt_nombre_archivo.setText(file.getName());
         nombre = file.getName();
+        int index = file.toString().lastIndexOf('.');
+        ext = file.toString().substring(index + 1);
     }
 }

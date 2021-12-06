@@ -12,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import jfxtras.styles.jmetro.JMetro;
@@ -65,9 +66,10 @@ public class MainControlador {
         Parent fxml = FXMLLoader.load(Main.class.getResource("vista/documental/gestion_documental.fxml"));
         Scene scene = new Scene(fxml);
         Stage stage = new Stage();
-        stage.setTitle("Documental");
+        stage.setTitle("Gestion documental");
         stage.setScene(scene);
         //stage.initOwner(root);
+        stage.getIcons().add(new Image(Main.class.getResourceAsStream("imagenes/grupoheredia.png")));
         stage.show();
         root.close();
     }
