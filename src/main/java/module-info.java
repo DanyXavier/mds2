@@ -4,6 +4,7 @@ module com.daluga.mds {
     requires javafx.graphics;
     requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.web;
     requires MaterialFX;
     requires com.fasterxml.jackson.databind;
     requires com.jfoenix;
@@ -11,7 +12,8 @@ module com.daluga.mds {
     requires org.apache.httpcomponents.httpcore;
     requires org.apache.httpcomponents.httpmime;
     requires org.jfxtras.styles.jmetro;
-    requires com.google.gson;
+    requires org.apache.commons.io;
+    requires org.apache.commons.codec;
 
 
     opens com.daluga.mds to javafx.fxml;
@@ -26,4 +28,7 @@ module com.daluga.mds {
     exports com.daluga.mds.controladores.sweet_alert;
     exports com.daluga.mds.controladores.opciones;
     opens com.daluga.mds.controladores.opciones to javafx.fxml;
+    exports com.daluga.mds.controladores.pdf;
+    opens com.daluga.mds.controladores.pdf to javafx.fxml;
+
 }

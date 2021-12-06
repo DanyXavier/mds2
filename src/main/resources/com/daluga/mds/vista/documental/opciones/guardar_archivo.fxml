@@ -27,13 +27,15 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       <RowConstraints minHeight="10.0" prefHeight="150.0" vgrow="SOMETIMES" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints fillHeight="false" prefHeight="150.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
       <Label text="Selecciona el archivo" />
-      <TextField fx:id="txt_nombre_archivo" editable="false" prefWidth="200.0" promptText="nombre del archivo..." GridPane.columnIndex="1" />
+      <TextField fx:id="txt_nombre_archivo" prefWidth="200.0" promptText="nombre del archivo..." GridPane.columnIndex="1" />
       <HBox alignment="CENTER" fillHeight="false" spacing="10.0" GridPane.columnIndex="2">
          <children>
-            <MFXButton fx:id="btn_buscar_archivo" style="-fx-background-color: #4782F0;" text="Buscar archivo" textFill="WHITE" />
+            <MFXButton onAction="#OnClickBuscarArchivo" style="-fx-background-color: #4782F0;" text="Buscar archivo" textFill="WHITE" />
          </children>
       </HBox>
       <Label text="Seleccione la fecha de creacion del archivo" GridPane.columnSpan="2" GridPane.rowIndex="1" />
@@ -44,16 +46,18 @@
       <ComboBox fx:id="cb_area" prefWidth="175.0" promptText="---Seleccione el area---" GridPane.columnSpan="2" GridPane.rowIndex="2" />
       <ComboBox fx:id="cb_directorio" prefWidth="200.0" promptText="---Seleccione el directorio---" GridPane.columnIndex="1" GridPane.rowIndex="2" />
       <ComboBox fx:id="cb_importancia" prefWidth="225.0" promptText="---Seleccione la importancia---" GridPane.rowIndex="3" />
-      <HBox alignment="CENTER_RIGHT" fillHeight="false" spacing="10.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
+      <HBox alignment="CENTER_RIGHT" fillHeight="false" spacing="10.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8">
          <children>
             <MFXButton fx:id="btn_aceptar" style="-fx-background-color: #4782F0;" text="Guardar" textFill="WHITE" />
             <MFXButton fx:id="btn_cancelar" style="-fx-background-color: #F04F38;" text="Cancelar" textFill="WHITE" />
          </children>
       </HBox>
       <Label text="Ingrese una nota para el documento" GridPane.rowIndex="4" />
-      <Label text="Ingrese una descripcion para el documento" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <TextArea fx:id="txt_nota" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="5" />
+      <Label text="Ingrese una descripcion para el documento" GridPane.columnSpan="2" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
+      <TextArea fx:id="txt_nota" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="7" />
       <TextArea fx:id="txt_descripcion" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+      <TextArea fx:id="txt_ubicacion" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="5" />
+      <Label text="Ingrese la ubicacion física del documento" GridPane.columnIndex="1" GridPane.rowIndex="4" />
    </children>
    <padding>
       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

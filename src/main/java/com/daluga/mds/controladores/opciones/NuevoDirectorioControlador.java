@@ -26,17 +26,6 @@ public class NuevoDirectorioControlador implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         new JMetro(txt_directorio, Style.LIGHT);
-    }
-    @FXML
-    public void OnClickAceptar(ActionEvent actionEvent) {
-        GestionDocumentalServicios servicios = new GestionDocumentalServicios();
-        Directorios directorios = new Directorios();
-        directorios.setDirectorio(txt_directorio.getText());
-        servicios.guardarDirectorio(directorios);
-    }
-    @FXML
-    public void OnClickCancelar(ActionEvent actionEvent) {
-        Stage stage = (Stage) txt_directorio.getScene().getWindow();
-        stage.close();
+
     }
 }
